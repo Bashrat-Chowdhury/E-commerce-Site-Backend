@@ -17,18 +17,11 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   // find one category by its `id` value
   // be sure to include its associated Products
+  const categoryId = req.params.id;
+
   try {
-    const categoryData = await Category.findByPk(req.params.id, {
-      // JOIN with locations, using the Trip through table
-      include: [{ model: Product, as: "Associated products" }],
-    });
-
-    if (!categoryData) {
-      res.status(404).json({ message: "No category found with this id!" });
-      return;
-    }
-
-    res.status(200).json(travellerData);
+    const data = await Category.findByPk(categoryId, { include: Product });
+    res.json(data);
   } catch (err) {
     res.status(500).json(err);
   }
